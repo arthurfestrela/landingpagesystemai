@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>estoquei.ia — O que vende mais, nunca falta.</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── THEMES ── */
+  :root {
+    --black: #0D0D0D;
+    --black2: #1A1A1A;
+    --green: #00C853;
+    --green2: #009940;
+    --green-bright: #00E676;
+    --green-dim: rgba(0,200,83,0.09);
+  }
+  [data-theme="light"] {
+    --bg:       #F5F3EF;
+    --bg2:      #EDEBE6;
+    --bg3:      #E2DDD5;
+    --card-bg:  #DEDAD2;
+    --prob-bg:  #C8C4BC;
+    --prob-bg-h:#BEBAB1;
+    --prob-brd: #B8B4AC;
+    --ink:      #1A1A1A;
+    --ink2:     #3D3D3D;
+    --ink3:     #6B6B6B;
+    --ink4:     #999690;
+    --nav-bg:   rgba(13,13,13,0.97);
+    --nav-link: #888;
+    --footer-bg:#F5F3EF;
+    --ticker-bg:#1A1A1A;
+    --plan-feat:#F5F3EF;
+    --plan-brd: #E2DDD5;
+    --hero-center-dot: #F5F3EF;
+  }
+  [data-theme="dark"] {
+    --bg:       #0D0D0D;
+    --bg2:      #141414;
+    --bg3:      #1C1C1C;
+    --card-bg:  #222222;
+    --prob-bg:  #1E1E1E;
+    --prob-bg-h:#252525;
+    --prob-brd: #2A2A2A;
+    --ink:      #F0EEE9;
+    --ink2:     #C8C6C2;
+    --ink3:     #888580;
+    --ink4:     #555250;
+    --nav-bg:   rgba(8,8,8,0.97);
+    --nav-link: #666;
+    --footer-bg:#0D0D0D;
+    --ticker-bg:#111111;
+    --plan-feat:#141414;
+    --plan-brd: #2A2A2A;
+    --hero-center-dot: #0D0D0D;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+    transition: background .35s ease, color .35s ease;
+  }
+
+  /* ── CURSOR ── */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--green);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width .2s, height .2s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0,200,83,0.45);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: width .2s, height .2s, opacity .2s;
+  }
+  body.hovering .cursor { width: 14px; height: 14px; }
+  body.hovering .cursor-ring { width: 50px; height: 50px; opacity: 0.5; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 48px;
+    background: var(--nav-bg);
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    backdrop-filter: blur(14px);
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  /* SVG Logo inline na navbar */
+  .nav-logo-svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .nav-logo-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 19px; font-weight: 700;
+    letter-spacing: -0.5px; color: #fff;
+  }
+  .nav-logo-text span { color: var(--green-bright); }
+  .nav-right { display: flex; align-items: center; gap: 28px; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; color: var(--nav-link);
+    text-decoration: none; letter-spacing: .5px; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--green-bright); }
+  .nav-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    color: #0D0D0D !important; background: var(--green-bright);
+    padding: 9px 20px; border-radius: 2px;
+    text-decoration: none; letter-spacing: .5px;
+    transition: background .2s, transform .15s !important;
+  }
+  .nav-cta:hover { background: var(--green) !important; transform: translateY(-1px); }
+
+  /* Theme toggle button */
+  .theme-toggle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, border-color .2s, transform .2s;
+    flex-shrink: 0;
+    color: #aaa;
+  }
+  .theme-toggle:hover { background: rgba(0,230,118,0.15); border-color: var(--green); color: var(--green-bright); transform: rotate(20deg); }
+  .theme-toggle svg { width: 16px; height: 16px; transition: opacity .2s; }
+  .icon-sun { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 140px 48px 80px;
+    position: relative; overflow: hidden;
+    background: var(--bg);
+    transition: background .35s ease;
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,200,83,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,83,0.055) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+  .hero-dot-deco {
+    position: absolute; right: 80px; top: 50%;
+    transform: translateY(-50%);
+    width: 300px; height: 300px; z-index: 0; opacity: 0.13;
+  }
+  .hero-dot-deco circle { animation: pulse-ring 3s ease-in-out infinite; }
+  .hero-dot-deco circle:nth-child(2) { animation-delay: 0.8s; }
+  .hero-dot-deco circle:nth-child(3) { animation-delay: 1.6s; }
+  @keyframes pulse-ring { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  .hero-content { position: relative; z-index: 1; max-width: 820px; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--green2);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0; animation: fadeUp .6s ease forwards .2s;
+  }
+  .hero-tag::before { content: ''; width: 20px; height: 1px; background: var(--green); }
+
+  .hero-h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(50px, 7vw, 92px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -3px;
+    color: var(--ink);
+    margin-bottom: 32px;
+    opacity: 0; animation: fadeUp .7s ease forwards .35s;
+    transition: color .35s ease;
+  }
+  .hero-h1 .accent { color: var(--green); }
+  .hero-h1 .line2 { display: block; color: var(--ink3); font-weight: 300; transition: color .35s ease; }
+
+  .hero-sub {
+    font-size: 18px; color: var(--ink3);
+    max-width: 480px; line-height: 1.7; margin-bottom: 48px;
+    opacity: 0; animation: fadeUp .7s ease forwards .5s;
+    transition: color .35s ease;
+  }
+  .hero-actions {
+    display: flex; align-items: center; gap: 20px;
+    opacity: 0; animation: fadeUp .7s ease forwards .65s;
+  }
+  .btn-primary {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; font-weight: 500;
+    color: #fff; background: var(--ink);
+    padding: 14px 32px; border-radius: 2px;
+    text-decoration: none; letter-spacing: .3px;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform .15s, background .2s, color .35s ease;
+  }
+  .btn-primary:hover { transform: translateY(-2px); background: var(--green); color: #fff; }
+  .btn-primary svg { transition: transform .2s; }
+  .btn-primary:hover svg { transform: translateX(3px); }
+  .btn-ghost {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; color: var(--ink3);
+    text-decoration: none; letter-spacing: .3px;
+    display: inline-flex; align-items: center; gap: 8px; transition: color .2s;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+
+  .hero-stats {
+    display: flex; gap: 48px; margin-top: 80px;
+    padding-top: 40px; border-top: 0.5px solid var(--bg3);
+    opacity: 0; animation: fadeUp .7s ease forwards .8s;
+    transition: border-color .35s ease;
+  }
+  .stat-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px; font-weight: 700;
+    color: var(--ink); letter-spacing: -1px; line-height: 1;
+    transition: color .35s ease;
+  }
+  .stat-val span { color: var(--green); }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--ink4); letter-spacing: .5px; margin-top: 4px;
+    transition: color .35s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TICKER ── */
+  .ticker { background: var(--ticker-bg); padding: 12px 0; overflow: hidden; transition: background .35s ease; }
+  .ticker-track {
+    display: flex; animation: ticker 18s linear infinite; white-space: nowrap;
+  }
+  .ticker-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500; color: #fff;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 0 32px; display: inline-flex; align-items: center; gap: 16px;
+  }
+  .ticker-item::after { content: '●'; font-size: 6px; color: var(--green-bright); }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── SHARED SECTION ── */
+  section { padding: 120px 48px; transition: background .35s ease; }
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--green2);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+  }
+  .section-tag::before { content: ''; width: 20px; height: 1px; background: var(--green); }
+  .section-h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(34px, 4vw, 54px);
+    font-weight: 700; letter-spacing: -2px;
+    line-height: 1.05; color: var(--ink); margin-bottom: 20px;
+    transition: color .35s ease;
+  }
+  .section-h2 .dim { color: var(--ink3); font-weight: 300; transition: color .35s ease; }
+
+  /* ── FÁCIL DE USAR ── */
+  .easy { background: var(--bg); }
+  .easy-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 2px; margin-top: 56px;
+  }
+  .easy-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--bg3);
+    padding: 36px 28px;
+    transition: background .2s, box-shadow .2s, border-color .35s ease;
+    position: relative; overflow: hidden;
+  }
+  .easy-card:hover { background: var(--card-bg); box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+  .easy-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: transparent; transition: background .25s;
+  }
+  .easy-card:hover::before { background: var(--green); }
+  .easy-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--green2); letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .easy-icon { font-size: 28px; margin-bottom: 14px; }
+  .easy-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 600;
+    color: var(--ink); letter-spacing: -.3px; margin-bottom: 10px;
+    transition: color .35s ease;
+  }
+  .easy-desc { font-size: 14px; color: var(--ink3); line-height: 1.7; transition: color .35s ease; }
+
+  /* ── PROBLEMA ── */
+  .problema { background: var(--bg2); }
+  .problema-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-top: 60px;
+  }
+  .prob-card {
+    padding: 36px 32px;
+    background: var(--prob-bg);
+    position: relative; overflow: hidden;
+    border-radius: 4px;
+    border: 0.5px solid var(--prob-brd);
+    transition: background .25s, box-shadow .25s, border-color .35s ease;
+  }
+  .prob-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: transparent; transition: background .25s;
+  }
+  .prob-card:hover { background: var(--prob-bg-h); box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+  .prob-card:hover::before { background: var(--green); }
+  .prob-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 72px; font-weight: 700;
+    color: rgba(26,26,26,0.07);
+    letter-spacing: -4px; line-height: 1;
+    position: absolute; top: 12px; right: 20px;
+  }
+  [data-theme="dark"] .prob-num { color: rgba(255,255,255,0.04); }
+  .prob-icon {
+    width: 38px; height: 38px;
+    border: 1px solid rgba(26,26,26,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; font-size: 17px;
+  }
+  [data-theme="dark"] .prob-icon { border-color: rgba(255,255,255,0.12); }
+  .prob-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 19px; font-weight: 600;
+    color: var(--ink); margin-bottom: 10px; letter-spacing: -.4px;
+    transition: color .35s ease;
+  }
+  .prob-desc { font-size: 14px; color: var(--ink3); line-height: 1.7; transition: color .35s ease; }
+
+  /* ── FEATURES ── */
+  .features { background: var(--bg); }
+  .features-header { max-width: 560px; margin-bottom: 80px; }
+  .features-list { display: flex; flex-direction: column; }
+  .feat {
+    display: grid; grid-template-columns: 80px 1fr 1fr;
+    border-top: 0.5px solid var(--bg3);
+    padding: 40px 0; transition: all .2s; cursor: default;
+  }
+  .feat:last-child { border-bottom: 0.5px solid var(--bg3); }
+  .feat:hover .feat-num { color: var(--green); }
+  .feat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; color: var(--ink4); letter-spacing: 1px;
+    padding-top: 4px; transition: color .2s;
+  }
+  .feat-left { padding-right: 40px; }
+  .feat-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 23px; font-weight: 600;
+    color: var(--ink); letter-spacing: -.5px; margin-bottom: 10px;
+    transition: color .35s ease;
+  }
+  .feat-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; color: var(--green2);
+    border: 1px solid rgba(0,153,64,0.25);
+    padding: 3px 10px; border-radius: 2px;
+    letter-spacing: .5px; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .feat-bar-wrap { height: 1px; background: var(--bg3); margin-bottom: 16px; transition: background .35s ease; }
+  .feat-bar { height: 1px; background: var(--green); width: 0; transition: width .5s ease; }
+  .feat-desc { font-size: 14px; color: var(--ink3); line-height: 1.8; transition: color .35s ease; }
+  .feat-right { display: flex; align-items: center; justify-content: flex-end; padding-left: 40px; }
+  .feat-visual {
+    width: 140px; height: 100px;
+    background: var(--bg2); border: 0.5px solid var(--bg3);
+    border-radius: 4px; display: flex; align-items: center; justify-content: center;
+    overflow: hidden; transition: background .35s ease, border-color .35s ease;
+  }
+  .mini-shelf { display: flex; gap: 4px; align-items: flex-end; padding: 0 12px; }
+  .mini-shelf-bar { width: 12px; border-radius: 2px 2px 0 0; background: var(--ink3); transition: background .3s; }
+  .feat:hover .mini-shelf-bar { background: var(--green); }
+  .mini-shelf-bar.empty { background: transparent; border: 1px dashed var(--ink4); }
+  .feat:hover .mini-shelf-bar.empty { border-color: var(--green); }
+  .mini-dot { width: 40px; height: 40px; position: relative; }
+  .mini-dot-ring { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink3); position: absolute; inset: 0; }
+  .feat:hover .mini-dot-ring { border-color: var(--green); }
+  .mini-dot-center { width: 10px; height: 10px; border-radius: 50%; background: var(--ink3); position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .feat:hover .mini-dot-center { background: var(--green); }
+  .mini-chat { padding: 12px; display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .mini-bubble { height: 10px; border-radius: 8px; background: var(--bg3); }
+  .mini-bubble.green { background: rgba(0,200,83,0.2); width: 70%; align-self: flex-end; }
+  .feat:hover .mini-bubble.green { background: rgba(0,200,83,0.5); }
+  .mini-scan { width: 60px; height: 60px; position: relative; display: flex; align-items: center; justify-content: center; }
+  .mini-scan-corner { position: absolute; width: 14px; height: 14px; border-color: var(--ink3); border-style: solid; }
+  .feat:hover .mini-scan-corner { border-color: var(--green); }
+  .mini-scan-corner.tl { top:0;left:0;border-width:2px 0 0 2px; }
+  .mini-scan-corner.tr { top:0;right:0;border-width:2px 2px 0 0; }
+  .mini-scan-corner.bl { bottom:0;left:0;border-width:0 0 2px 2px; }
+  .mini-scan-corner.br { bottom:0;right:0;border-width:0 2px 2px 0; }
+  .mini-scan-line { position: absolute; left: 6px; right: 6px; height: 1px; background: var(--ink3); animation: scan-line 2s ease-in-out infinite; }
+  .feat:hover .mini-scan-line { background: var(--green); }
+  @keyframes scan-line { 0%,100%{top:20%} 50%{top:75%} }
+
+  /* ── PLANOS ── */
+  .planos { background: var(--bg2); }
+  .planos-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 2px; margin-top: 60px;
+  }
+  .plan-card {
+    background: var(--plan-feat); padding: 40px 32px;
+    border: 0.5px solid var(--plan-brd);
+    transition: box-shadow .2s, background .35s ease, border-color .35s ease;
+  }
+  .plan-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+  .plan-card.featured { background: var(--black); border: none; }
+  .plan-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; font-weight: 500; color: var(--ink);
+    background: var(--green-bright); padding: 3px 10px; border-radius: 2px;
+    letter-spacing: .5px; text-transform: uppercase;
+    display: inline-block; margin-bottom: 20px;
+  }
+  .plan-name {
+    font-family: 'DM Mono', monospace; font-size: 12px; color: var(--ink4);
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px;
+    transition: color .35s ease;
+  }
+  .plan-card.featured .plan-name { color: #666; }
+  .plan-price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 48px; font-weight: 700; color: var(--ink);
+    letter-spacing: -2px; line-height: 1; margin-bottom: 4px;
+    transition: color .35s ease;
+  }
+  .plan-card.featured .plan-price { color: #fff; }
+  .plan-price.free { color: var(--green); }
+  .plan-price .currency { font-size: 20px; font-weight: 400; vertical-align: top; margin-top: 8px; display: inline-block; color: var(--ink3); }
+  .plan-card.featured .plan-price .currency { color: #888; }
+  .plan-period { font-size: 13px; color: var(--ink3); margin-bottom: 32px; transition: color .35s ease; }
+  .plan-card.featured .plan-period { color: #888; }
+  .plan-divider { height: 0.5px; background: var(--plan-brd); margin-bottom: 28px; transition: background .35s ease; }
+  .plan-card.featured .plan-divider { background: rgba(255,255,255,0.1); }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+  .plan-features li {
+    font-size: 13px; color: var(--ink4);
+    display: flex; align-items: flex-start; gap: 10px; line-height: 1.4;
+    transition: color .35s ease;
+  }
+  .plan-features li::before { content: '—'; color: var(--green); font-weight: 500; flex-shrink: 0; }
+  .plan-features li.active { color: var(--ink2); }
+  .plan-card.featured .plan-features li { color: #555; }
+  .plan-card.featured .plan-features li.active { color: #ddd; }
+  .plan-btn {
+    display: block; text-align: center;
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+    letter-spacing: .5px; text-decoration: none; padding: 13px; border-radius: 2px; transition: all .2s;
+  }
+  .plan-btn.outline { border: 1px solid var(--plan-brd); color: var(--ink2); }
+  .plan-btn.outline:hover { border-color: var(--ink); color: var(--ink); }
+  .plan-btn.solid { background: var(--green-bright); color: var(--ink); }
+  .plan-btn.solid:hover { background: var(--green); }
+
+  /* ── CTA FINAL ── */
+  .cta-final {
+    text-align: center; background: var(--black);
+    position: relative; overflow: hidden; padding: 120px 48px;
+  }
+  .cta-final-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,230,118,0.07) 0%, transparent 70%);
+  }
+  .cta-final-content { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .cta-final .section-tag { justify-content: center; color: var(--green-bright); }
+  .cta-final .section-tag::before { background: var(--green-bright); }
+  .cta-final h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(38px, 5vw, 64px);
+    font-weight: 700; letter-spacing: -2px;
+    line-height: 1.05; color: #fff; margin-bottom: 20px;
+  }
+  .cta-final h2 .accent { color: var(--green-bright); }
+  .cta-final .cta-sub { font-size: 17px; color: #888; margin-bottom: 48px; line-height: 1.7; }
+  .contact-cards {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 12px; margin-bottom: 40px;
+  }
+  .contact-card {
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 4px; padding: 28px 24px; text-align: left;
+    transition: background .2s, border-color .2s;
+    text-decoration: none;
+  }
+  .contact-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(0,230,118,0.4); }
+  .contact-card-icon { font-size: 24px; margin-bottom: 12px; }
+  .contact-card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px;
+  }
+  .contact-card-desc { font-size: 13px; color: #777; line-height: 1.6; }
+  .contact-card-action {
+    margin-top: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--green-bright);
+    letter-spacing: .5px; display: flex; align-items: center; gap: 6px;
+  }
+  .cta-note { font-size: 12px; color: #555; }
+  .cta-note span { color: var(--green-bright); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 48px; background: var(--footer-bg);
+    border-top: 0.5px solid var(--bg3);
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    transition: background .35s ease, border-color .35s ease;
+  }
+  .footer-logo {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;
+    color: var(--ink); text-decoration: none; transition: color .35s ease;
+  }
+  .footer-logo svg { width: 22px; height: 22px; }
+  .footer-logo span { color: var(--green); }
+  .footer-copy { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink4); letter-spacing: .3px; transition: color .35s ease; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink4); text-decoration: none; transition: color .2s; }
+  .footer-links a:hover { color: var(--green); }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 120px 24px 60px; }
+    .hero-dot-deco { display: none; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; }
+    section { padding: 80px 24px; }
+    .problema-grid, .easy-grid, .contact-cards { grid-template-columns: 1fr; }
+    .feat { grid-template-columns: 48px 1fr; }
+    .feat-right { display: none; }
+    .planos-grid { grid-template-columns: 1fr; }
+    footer { padding: 24px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <!-- Logo SVG inline (caixa + checkmark + ponto verde) -->
+    <svg class="nav-logo-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 18L24 10L40 18V30L24 38L8 30V18Z" stroke="white" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+      <path d="M8 18L24 26L40 18" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M24 26V38" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M16 22L21 27L30 18" stroke="#00E676" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="35" cy="11" r="3.5" fill="#00E676"/>
+    </svg>
+    <span class="nav-logo-text">estoquei<span>.ia</span></span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#features">Funcionalidades</a>
+      <a href="#planos">Planos</a>
+      <a href="#cta" class="nav-cta">Falar com a equipe</a>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema" aria-label="Alternar modo claro/escuro">
+      <!-- sol -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- lua -->
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <svg class="hero-dot-deco" viewBox="0 0 300 300" fill="none">
+    <circle cx="150" cy="150" r="140" stroke="#00C853" stroke-width="1"/>
+    <circle cx="150" cy="150" r="96" stroke="#00C853" stroke-width="1"/>
+    <circle cx="150" cy="150" r="52" stroke="#00C853" stroke-width="1"/>
+    <circle cx="150" cy="150" r="18" fill="#00C853"/>
+    <circle cx="150" cy="150" r="7" fill="var(--hero-center-dot)"/>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-tag">Gestão de estoque com IA — feita para o Brasil</div>
+    <h1 class="hero-h1">
+      O que vende mais,<br>
+      <span class="accent">nunca</span>
+      <span class="line2">falta.</span>
+    </h1>
+    <p class="hero-sub">A IA avisa antes de sumir, sugere reposição com 5 a 7 dias de antecedência e gera relatórios em linguagem humana — sem planilhas, sem complicação.</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">
+        Começar agora
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="#features" class="btn-ghost">Ver como funciona →</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-val">12<span>M</span></div>
+        <div class="stat-label">PMEs sem sistema de gestão</div>
+      </div>
+      <div>
+        <div class="stat-val">67<span>%</span></div>
+        <div class="stat-label">ainda dependem de planilha</div>
+      </div>
+      <div>
+        <div class="stat-val">12</div>
+        <div class="stat-label">clientes para break-even</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">Avisa antes de acabar</span>
+    <span class="ticker-item">Resumo semanal no WhatsApp</span>
+    <span class="ticker-item">Cadastro em 5 minutos</span>
+    <span class="ticker-item">Relatório mensal em português</span>
+    <span class="ticker-item">Scan pela câmera do celular</span>
+    <span class="ticker-item">Dashboard em tempo real</span>
+    <span class="ticker-item">Sem hardware extra</span>
+    <span class="ticker-item">Para o seu negócio do jeito que é</span>
+    <span class="ticker-item">Avisa antes de acabar</span>
+    <span class="ticker-item">Resumo semanal no WhatsApp</span>
+    <span class="ticker-item">Cadastro em 5 minutos</span>
+    <span class="ticker-item">Relatório mensal em português</span>
+    <span class="ticker-item">Scan pela câmera do celular</span>
+    <span class="ticker-item">Dashboard em tempo real</span>
+    <span class="ticker-item">Sem hardware extra</span>
+    <span class="ticker-item">Para o seu negócio do jeito que é</span>
+  </div>
+</div>
+
+<!-- FÁCIL DE USAR -->
+<section class="easy" id="easy">
+  <div class="section-tag reveal">simples por design</div>
+  <h2 class="section-h2 reveal">Pronto em minutos.<br><span class="dim">Sem treinamento.</span></h2>
+  <p class="reveal" style="font-size:16px;color:var(--ink3);max-width:520px;margin-bottom:0;line-height:1.8;">Se travar nos primeiros 5 minutos, o empreendedor desiste. Por isso o estoquei.ia foi desenhado para ser óbvio desde o primeiro clique — sem manuais, sem curva de aprendizado.</p>
+  <div class="easy-grid">
+    <div class="easy-card reveal reveal-delay-1">
+      <div class="easy-num">PASSO 01</div>
+      <div class="easy-icon">✉️</div>
+      <div class="easy-title">Crie sua conta em 30 segundos</div>
+      <div class="easy-desc">Só e-mail ou Google. O sistema detecta o tipo do seu negócio e configura tudo sozinho.</div>
+    </div>
+    <div class="easy-card reveal reveal-delay-2">
+      <div class="easy-num">PASSO 02</div>
+      <div class="easy-icon">📦</div>
+      <div class="easy-title">Cadastre produtos pela câmera</div>
+      <div class="easy-desc">Aponte o celular para o código de barras. Nome, categoria e dados preenchidos na hora.</div>
+    </div>
+    <div class="easy-card reveal reveal-delay-3">
+      <div class="easy-num">PASSO 03</div>
+      <div class="easy-icon">🤖</div>
+      <div class="easy-title">A IA assume o controle</div>
+      <div class="easy-desc">Com os primeiros produtos, o sistema já monitora, alerta e aprende o ritmo do seu estoque automaticamente.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section class="problema" id="problema">
+  <div class="section-tag reveal">o problema</div>
+  <h2 class="section-h2 reveal">Todo dono de loja já <span class="dim">perdeu venda</span><br>por falta de produto.</h2>
+  <div class="problema-grid">
+    <div class="prob-card reveal reveal-delay-1">
+      <div class="prob-num">01</div>
+      <div class="prob-icon">📦</div>
+      <div class="prob-title">Produto some sem avisar</div>
+      <div class="prob-desc">O arroz acabou na sexta, o fornecedor não atende no fim de semana. O cliente vai ao concorrente — e não volta.</div>
+    </div>
+    <div class="prob-card reveal reveal-delay-2">
+      <div class="prob-num">02</div>
+      <div class="prob-icon">📊</div>
+      <div class="prob-title">Planilha não prevê, só registra</div>
+      <div class="prob-desc">67% dos empreendedores usam Excel. Ele anota o passado — não avisa o que vai faltar amanhã.</div>
+    </div>
+    <div class="prob-card reveal reveal-delay-1">
+      <div class="prob-num">03</div>
+      <div class="prob-icon">💸</div>
+      <div class="prob-title">Sistemas existentes não são para você</div>
+      <div class="prob-desc">LEAFIO, Zoho, DATUP. Em inglês, caros e feitos para multinacionais — não para quem vende todo dia.</div>
+    </div>
+    <div class="prob-card reveal reveal-delay-2">
+      <div class="prob-num">04</div>
+      <div class="prob-icon">📱</div>
+      <div class="prob-title">Ninguém tem tempo para aprender sistema</div>
+      <div class="prob-desc">O sistema tem que ser óbvio desde o primeiro clique. Se precisar de manual, já perdeu.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-header">
+    <div class="section-tag">funcionalidades</div>
+    <h2 class="section-h2 reveal">Tudo que seu estoque<br><span class="dim">precisa saber.</span></h2>
+  </div>
+  <div class="features-list">
+
+    <div class="feat reveal">
+      <div class="feat-num">01</div>
+      <div class="feat-left">
+        <div class="feat-tag">diferencial</div>
+        <div class="feat-title">Ponto de reposição inteligente</div>
+        <div class="feat-bar-wrap"><div class="feat-bar"></div></div>
+        <div class="feat-desc">A IA analisa o ritmo de vendas e avisa com 5 a 7 dias de antecedência quando um produto vai faltar. Você repõe antes de perder venda.</div>
+      </div>
+      <div class="feat-right">
+        <div class="feat-visual">
+          <div class="mini-dot">
+            <div class="mini-dot-ring"></div>
+            <div class="mini-dot-center"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat reveal">
+      <div class="feat-num">02</div>
+      <div class="feat-left">
+        <div class="feat-tag">exclusivo</div>
+        <div class="feat-title">Relatório mensal em português real</div>
+        <div class="feat-bar-wrap"><div class="feat-bar"></div></div>
+        <div class="feat-desc">Toda virada de mês, a IA gera um texto em linguagem humana: qual produto brilhou, qual está parado, o que comprar e de quem. Nada de gráfico sem contexto.</div>
+      </div>
+      <div class="feat-right">
+        <div class="feat-visual">
+          <div class="mini-chat">
+            <div class="mini-bubble" style="width:90%"></div>
+            <div class="mini-bubble" style="width:75%"></div>
+            <div class="mini-bubble green"></div>
+            <div class="mini-bubble" style="width:60%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat reveal">
+      <div class="feat-num">03</div>
+      <div class="feat-left">
+        <div class="feat-tag">toda semana</div>
+        <div class="feat-title">Alertas pontuais no WhatsApp</div>
+        <div class="feat-bar-wrap"><div class="feat-bar"></div></div>
+        <div class="feat-desc">Toda segunda às 8h chega um resumo: o que mais vendeu, o que está no limite, o que precisa de atenção. Durante a semana, alertas chegam no momento certo — sem ruído.</div>
+      </div>
+      <div class="feat-right">
+        <div class="feat-visual">
+          <div style="font-family:monospace;font-size:10px;color:#009940;padding:10px;text-align:left;line-height:1.8;">
+            <span style="color:var(--ink4);">seg 08:00</span><br>
+            Vendas ↑ 12%<br>
+            <span style="color:#00C853;">Arroz: repor quinta</span><br>
+            <span style="color:var(--ink4);">3 alertas ✓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat reveal">
+      <div class="feat-num">04</div>
+      <div class="feat-left">
+        <div class="feat-tag">sem hardware</div>
+        <div class="feat-title">Scan de código de barras pela câmera</div>
+        <div class="feat-bar-wrap"><div class="feat-bar"></div></div>
+        <div class="feat-desc">Aponte o celular para o produto e ele é cadastrado automaticamente. O celular que você já tem já basta.</div>
+      </div>
+      <div class="feat-right">
+        <div class="feat-visual">
+          <div class="mini-scan">
+            <div class="mini-scan-corner tl"></div>
+            <div class="mini-scan-corner tr"></div>
+            <div class="mini-scan-corner bl"></div>
+            <div class="mini-scan-corner br"></div>
+            <div class="mini-scan-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat reveal">
+      <div class="feat-num">05</div>
+      <div class="feat-left">
+        <div class="feat-tag">dashboard</div>
+        <div class="feat-title">Visão em tempo real do que importa</div>
+        <div class="feat-bar-wrap"><div class="feat-bar"></div></div>
+        <div class="feat-desc">Total em estoque, valor financeiro, alertas críticos e giro de produtos — atualizado ao vivo. Dois modos: simples para o essencial, denso para quem quer tudo.</div>
+      </div>
+      <div class="feat-right">
+        <div class="feat-visual">
+          <div class="mini-shelf">
+            <div class="mini-shelf-bar" style="height:52px"></div>
+            <div class="mini-shelf-bar" style="height:38px"></div>
+            <div class="mini-shelf-bar empty" style="height:44px"></div>
+            <div class="mini-shelf-bar" style="height:60px"></div>
+            <div class="mini-shelf-bar" style="height:28px"></div>
+            <div class="mini-shelf-bar empty" style="height:44px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section class="planos" id="planos">
+  <div class="section-tag reveal">planos</div>
+  <h2 class="section-h2 reveal">Começa grátis.<br><span class="dim">Cresce com você.</span></h2>
+  <div class="planos-grid">
+
+    <div class="plan-card reveal">
+      <div class="plan-name">Gratuito</div>
+      <div class="plan-price free">R$0</div>
+      <div class="plan-period">para sempre</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li class="active">Até 15 produtos</li>
+        <li class="active">1 usuário</li>
+        <li class="active">Dashboard básico</li>
+        <li class="active">Alertas de estoque</li>
+        <li class="active">Scan por câmera</li>
+        <li class="active">Resumo semanal no WhatsApp</li>
+        <li>Relatório IA mensal</li>
+        <li>Alertas diários WhatsApp</li>
+        <li>Exportação PDF/Excel</li>
+      </ul>
+      <a href="#cta" class="plan-btn outline">Começar grátis</a>
+    </div>
+
+    <div class="plan-card featured reveal reveal-delay-1">
+      <div class="plan-badge">Mais popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><span class="currency">R$</span>59</div>
+      <div class="plan-period">por mês</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li class="active">Produtos ilimitados</li>
+        <li class="active">Até 3 usuários</li>
+        <li class="active">Dashboard completo</li>
+        <li class="active">Relatório IA mensal</li>
+        <li class="active">Resumo semanal no WhatsApp</li>
+        <li class="active">Alertas diários às 8h</li>
+        <li class="active">Previsão de falta (5–7 dias)</li>
+        <li class="active">Exportação PDF/Excel</li>
+        <li>API pública</li>
+      </ul>
+      <a href="#cta" class="plan-btn solid">Falar com a equipe</a>
+    </div>
+
+    <div class="plan-card reveal reveal-delay-2">
+      <div class="plan-name">Business</div>
+      <div class="plan-price"><span class="currency">R$</span>129</div>
+      <div class="plan-period">por mês</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li class="active">Usuários ilimitados</li>
+        <li class="active">Até 3 lojas</li>
+        <li class="active">Tudo do Pro</li>
+        <li class="active">IA conversacional</li>
+        <li class="active">API pública</li>
+        <li class="active">Integração NF-e</li>
+        <li class="active">Suporte prioritário</li>
+        <li class="active">Log de auditoria completo</li>
+      </ul>
+      <a href="#cta" class="plan-btn outline">Falar com a equipe</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA / CONTATO -->
+<section class="cta-final" id="cta">
+  <div class="cta-final-bg"></div>
+  <div class="cta-final-content reveal">
+    <div class="section-tag">fale com a equipe</div>
+    <h2>Qual plano é o<br>certo para <span class="accent">você?</span></h2>
+    <p class="cta-sub">Antes de qualquer assinatura, vamos entender seu negócio e encontrar juntos o que faz sentido para o seu estoque.</p>
+
+    <div class="contact-cards">
+      <a href="https://wa.me/55SEUNUMERO" class="contact-card" target="_blank">
+        <div class="contact-card-icon">💬</div>
+        <div class="contact-card-title">WhatsApp</div>
+        <div class="contact-card-desc">Resposta em até 2 horas em dias úteis.</div>
+        <div class="contact-card-action">Iniciar conversa →</div>
+      </a>
+      <a href="mailto:oi@estoquei.ia" class="contact-card">
+        <div class="contact-card-icon">✉️</div>
+        <div class="contact-card-title">E-mail</div>
+        <div class="contact-card-desc">Detalhe por escrito e a gente responde com uma proposta personalizada.</div>
+        <div class="contact-card-action">Enviar e-mail →</div>
+      </a>
+    </div>
+
+    <div class="cta-note">Plano grátis disponível agora — <span>até 15 produtos, sem cartão.</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="footer-logo" href="#">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 18L24 10L40 18V30L24 38L8 30V18Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+      <path d="M8 18L24 26L40 18" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M24 26V38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M16 22L21 27L30 18" stroke="#00C853" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="35" cy="11" r="3.5" fill="#00C853"/>
+    </svg>
+    estoquei<span>.ia</span>
+  </a>
+  <div class="footer-links">
+    <a href="#">Privacidade</a>
+    <a href="#">Termos</a>
+    <a href="#">Suporte</a>
+  </div>
+  <div class="footer-copy">© 2026 estoquei.ia — O que vende mais, nunca falta.</div>
+</footer>
+
+<script>
+  // ── CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+  });
+  (function animateRing(){
+    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(animateRing);
+  })();
+  document.querySelectorAll('a,button,.feat,.prob-card,.easy-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+  });
+
+  // ── REVEAL on scroll
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // ── FEATURE hover bar
+  document.querySelectorAll('.feat').forEach(feat=>{
+    feat.addEventListener('mouseenter',()=>{ const b=feat.querySelector('.feat-bar'); if(b) b.style.width='100%'; });
+    feat.addEventListener('mouseleave',()=>{ const b=feat.querySelector('.feat-bar'); if(b) b.style.width='0%'; });
+  });
+
+  // ── DARK / LIGHT MODE TOGGLE
+  const html = document.documentElement;
+  const btn  = document.getElementById('themeToggle');
+  // Persist preference
+  const saved = localStorage.getItem('estoquei-theme');
+  if (saved) html.setAttribute('data-theme', saved);
+  btn.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('estoquei-theme', next);
+  });
+</script>
+</body>
+</html>
